@@ -1,0 +1,14 @@
+h1{
+    text-align: center;
+}
+.todo-row{
+    display: flex;
+    flex-wrap:wrap;
+    align-items: center;
+    align-content: flex-start;
+    justify-content: center;
+    gap: 4rem;
+}
+.bg-beige{
+    background-color: beige;
+}

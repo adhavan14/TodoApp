@@ -1,0 +1,13 @@
+---
+version: "3.8"
+services:
+  web:
+    depends_on:
+      - api
+    build: ./ToDoApp Frontend/vite-project
+    ports: 
+      - "3000:3000"
+  api:
+    build: ./ToDoApp Backend
+    ports: 
+      - "8080:8080"
