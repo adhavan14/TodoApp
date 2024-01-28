@@ -1,6 +1,9 @@
 package repository
 
-import "com/app/entity"
+import (
+	"com/app/entity"
+	"com/app/utils"
+)
 
 func CreateUser(user *entity.User) error {
 
@@ -12,7 +15,13 @@ func CreateUser(user *entity.User) error {
 		return err
 	}
 
-	result, err := statement.Exec(user.Username, user.Password)
+	encrytedPassword, err := utils.EncryptPassword(user.Password)
+
+	if err != nil {
+		return err
+	}
+	
+	result, err := statement.Exec(user.Username, encrytedPassword)
 
 	if err != nil {
 		return err
@@ -28,9 +37,6 @@ func CreateUser(user *entity.User) error {
 	return nil
 }
 
-func validCredentials(user *entity.User, password string) bool {
-	return user.Password == password
-}
 
 func Authenticate(user *entity.User) bool {
 
@@ -45,5 +51,5 @@ func Authenticate(user *entity.User) bool {
 	if err != nil {
 		return false
 	}
-	return validCredentials(user, password)
+	return utils.CheckPassword(user.Password, password)
 }
