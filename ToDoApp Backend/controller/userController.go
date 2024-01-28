@@ -3,6 +3,7 @@ package controller
 import (
 	"com/app/entity"
 	"com/app/repository"
+	"com/app/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -45,5 +46,7 @@ func login(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"message" : "login successful"})
+	token, err := utils.GenerateToken(user.Username, user.Id)
+
+	context.JSON(http.StatusOK, gin.H{"message" : "login successful", "token" : token})
 }
