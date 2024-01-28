@@ -8,4 +8,6 @@ func GateWay(server *gin.Engine) {
 	server.GET("/todo/getAll", getAllTodos)
 	server.DELETE("/todo/delete", deleteById)
 	server.PUT("/todo/update/:id", updateTodo)
+	server.POST("/user/create", createUser)
+	server.POST("/user/login", login)
 }
