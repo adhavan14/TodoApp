@@ -19,6 +19,8 @@ func saveTodo(context *gin.Context) {
 		return
 	}
 
+	todo.UserId = context.GetInt64("userId")
+	
 	err = repository.SaveTodo(todo)
 
 	if err != nil {

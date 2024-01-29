@@ -38,7 +38,7 @@ func CreateUser(user *entity.User) error {
 }
 
 
-func Authenticate(user *entity.User) bool {
+func Login(user *entity.User) bool {
 
 	query := `select id, password from users where username = ?`
 

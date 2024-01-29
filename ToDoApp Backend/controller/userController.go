@@ -5,7 +5,6 @@ import (
 	"com/app/repository"
 	"com/app/utils"
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -41,8 +40,8 @@ func login(context *gin.Context) {
 		return
 	}
 
-	if (!repository.Authenticate(user)) {
-		context.JSON(http.StatusInternalServerError, gin.H{"message" : "invalid credentials"})
+	if (!repository.Login(user)) {
+		context.JSON(http.StatusUnauthorized, gin.H{"message" : "invalid credentials"})
 		return
 	}
 

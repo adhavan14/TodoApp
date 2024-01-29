@@ -7,6 +7,7 @@ type Todo struct {
 	Title string
 	Description string
 	IsDone bool
+	UserId int64
 }
 
 func createTodo(title string, description string) (*Todo, error) {

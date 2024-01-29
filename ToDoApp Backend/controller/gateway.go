@@ -1,13 +1,21 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"com/app/middleware"
+	"github.com/gin-gonic/gin"
+)
 
 
 func GateWay(server *gin.Engine) {
-	server.POST("/todo/create", saveTodo)
+
+
+	authenticated := server.Group("/")
+	authenticated.Use(middleware.Authenticate)
+	authenticated.POST("/todo/create", saveTodo)
+	authenticated.DELETE("/todo/delete", deleteById)
+	authenticated.PUT("/todo/update/:id", updateTodo)
+
 	server.GET("/todo/getAll", getAllTodos)
-	server.DELETE("/todo/delete", deleteById)
-	server.PUT("/todo/update/:id", updateTodo)
 	server.POST("/user/create", createUser)
 	server.POST("/user/login", login)
 }

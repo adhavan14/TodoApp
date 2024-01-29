@@ -4,7 +4,7 @@ import "com/app/entity"
 
 func SaveTodo(todo *entity.Todo) error {
 
-	query := `INSERT INTO todo(title, description) values (?,?)`
+	query := `INSERT INTO todo(title, description, user_id) values (?,?,?)`
 
 	statement, err := DB.Prepare(query)
 
@@ -12,7 +12,7 @@ func SaveTodo(todo *entity.Todo) error {
 		return err
 	}
 
-	result, err := statement.Exec(todo.Title, todo.Description)
+	result, err := statement.Exec(todo.Title, todo.Description, todo.UserId)
 
 	if err != nil {
 		return err
@@ -41,7 +41,7 @@ func GetAllTodos() ([]entity.Todo, error) {
 	for rows.Next() {
 
 		var todo entity.Todo
-		err := rows.Scan(&todo.Id, &todo.Title, &todo.Description, &todo.IsDone)
+		err := rows.Scan(&todo.Id, &todo.Title, &todo.Description, &todo.IsDone, &todo.UserId)
 
 		if err != nil {
 			return todos, err
