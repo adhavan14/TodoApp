@@ -1,10 +1,11 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
 import "./home.css"
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import TodoForm from "./newTodo/newTodo";
 import TodoItem from "./todo/todoItem";
+import { userContext } from "./router/rootRouter";
 
 
 const url = "http://localhost:8080/todo/"
@@ -12,22 +13,22 @@ const url = "http://localhost:8080/todo/"
 function ShowTodos() {
 
     const [data, setData] = useState([]);
+    const { token } = useContext(userContext); 
 
     useEffect(() => {
         getAll()
     }, []);
 
-    const getAll = () => {
-        axios.get(url + "getAll")
-        .then(response => {
-            setData(response.data)
-        }).catch(error => {
-            console.error(error)
-        })
+    const getAll = async() => {
+        const header = {Authorization : `Bearer ${token}`}
+        const response = await axios.get(url + "getAll", { headers:header })
+        setData(response.data)
     }
     
     const handleClickDelete = (itemId) => {
-        axios.delete(url + "delete", { params: { id: itemId } })
+        const header = {Authorization : `Bearer ${token}`}
+        console.log(token)
+        axios.delete(url + "delete", { params: { id: itemId } , headers:header})
         .then(response => {
             console.log(response.data)
             getAll()
@@ -51,7 +52,7 @@ function ShowTodos() {
             <ListAltIcon></ListAltIcon>
         </div>
         <div>
-            <TodoForm></TodoForm>
+            <TodoForm getTodos = {getAll}></TodoForm>
         </div>
         <ol>
             {
@@ -63,11 +64,12 @@ function ShowTodos() {
                     title={item.Title}
                     description={item.Description}
                     isDone={item.IsDone}
+                    getTodos = {getAll}
                     onCheckboxToggle={onCheckboxToggle}
                     onDelete={handleClickDelete}/>
                 ))
                 ) : (
-                    <li>No data available</li>
+                    <h6 className="flex items-center justify-center">No data available</h6>
                 )
             }
         </ol>

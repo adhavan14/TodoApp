@@ -2,51 +2,47 @@ import { IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Checkbox from '@mui/material/Checkbox';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import { userContext } from "../router/rootRouter";
 
 
 const url = "http://localhost:8080/todo/"
-const TodoItem = ({ itemId, title, description, isDone, onCheckboxToggle, onDelete }) => {
+const TodoItem = ({ itemId, title, description, isDone, getTodos,onCheckboxToggle, onDelete }) => {
+
+    const { token } = useContext(userContext)
     const [checked, setChecked] = useState(isDone);
     const [edit, setEdit] = useState(false)
     const [newTitle, setNewTitle] = useState(title)
     const [newDescription, setNewDescription] = useState(description)
   
-    const handleCheckboxChange = () => {
+    const handleCheckboxChange = async () => {
         const payload = {
             title : title,
             description : description,
             isDone : !checked
         }
-        axios.put(url + "update/" + itemId, payload)
-        .then(response => {
-            console.log(response.data)
-        }).catch(error => {
-            console.log(error)
-        })
+        const headers = { headers : {Authorization : `Bearer ${token}`} }
+        await axios.put(url + "update/" + itemId, payload, headers)
 
         setChecked(!checked);
         onCheckboxToggle(itemId);
+        getTodos()
     };
 
-    const handleClickEdit = () => {
+    const handleClickEdit = async () => {
         
         const payload = {
             title : newTitle,
             description : newDescription,
             isDone : checked
         }
-
-        axios.put(url + "update/" + itemId, payload)
-        .then(response => {
-            console.log(response.data)
-            setEdit(false)
-        }) .catch(error => {
-            console.log(error)
-        })
+        const headers = { headers : {Authorization : `Bearer ${token}`} }
+        await axios.put(url + "update/" + itemId, payload, headers)
+        setEdit(false)
+        getTodos()
     }
   
     return (

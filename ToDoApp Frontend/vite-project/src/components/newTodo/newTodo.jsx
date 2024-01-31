@@ -1,13 +1,15 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { TextField } from "@mui/material"
 import { Button } from "@mui/material"
 import axios from "axios"
+import { userContext } from "../router/rootRouter"
 
 
 const url = "http://localhost:8080/todo/"
 
-function TodoForm() {
+function TodoForm({getTodos}) {
 
+    const { token } = useContext(userContext)
     const [formData, setFormData] = useState({
         id : 0,
         title : "",
@@ -23,29 +25,32 @@ function TodoForm() {
         });
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
 
         const payload = {
             title : formData.title,
             description : formData.description
         }
-        axios.post(url + "create", payload)
-        .then(response => {
-            console.log(response.data)
-        }).catch(error => {
-            console.log(error)
-        })
+        const headers = { headers : {Authorization : `Bearer ${token}`} }
+        console.log(headers)
+
+        const response = await axios.post(url + "create", payload, headers)
+        console.log(response)
+        formData.title = ""
+        formData.description = ""
+        getTodos()
     }
 
     return (
         <div className="p-4">
-            <form className="flex justify-between items-center">
+            <form onSubmit={(e) => {e.preventDefault(); handleSubmit();}} className="flex justify-between items-center">
                 <div className="ml-40 w-1/6">
                 <TextField
                     id="standard-textarea-title"
                     label="Title"
                     variant="outlined"
                     name="title"
+                    value={formData.title}
                     onChange={handleInputData}
                     className="w-full"
                 />
@@ -56,6 +61,7 @@ function TodoForm() {
                     label="Description"
                     variant="outlined"
                     name="description"
+                    value={formData.description}
                     onChange={handleInputData}
                     className="w-full"
                 />
@@ -65,14 +71,13 @@ function TodoForm() {
                     variant="contained"
                     color="primary"
                     type="submit"
-                    onClick={handleSubmit}
                     disabled={formData.title === '' || formData.description === ''}
                     className="h-14 w-1/3"
                 >
                     ADD
                 </Button>
                 </div>
-        </form>
+            </form>
         </div>
     )
 }
