@@ -28,11 +28,11 @@ func SaveTodo(todo *entity.Todo) error {
 	return nil
 }
 
-func GetAllTodos() ([]entity.Todo, error) {
+func GetAllTodos(userId int64) ([]entity.Todo, error) {
 
 	var todos []entity.Todo
-	query := `SELECT * FROM todo ORDER BY id DESC`
-	rows, err := DB.Query(query)
+	query := `SELECT * FROM todo where user_id = ? ORDER BY id DESC`
+	rows, err := DB.Query(query, userId)
 
 	if err != nil {
 		return todos, err

@@ -33,7 +33,9 @@ func saveTodo(context *gin.Context) {
 
 func getAllTodos(context *gin.Context) {
 
-	todos, err := repository.GetAllTodos()
+	userId := context.GetInt64("userId")
+
+	todos, err := repository.GetAllTodos(userId)
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message":"Try again later"})

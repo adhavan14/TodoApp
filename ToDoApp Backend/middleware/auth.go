@@ -9,6 +9,12 @@ import (
 )
 
 func Authenticate(context *gin.Context) {
+	
+	if context.Request.Header.Get("Authorization") == "" {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message":"Invalid credentials"})
+		return
+	}
+
 	token := strings.Split(context.Request.Header.Get("Authorization"), " ")[1]
 
 	if token == "" {
@@ -22,7 +28,7 @@ func Authenticate(context *gin.Context) {
 		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message":"Invalid credentials"})
 		return
 	}
-
+	
 	context.Set("userId", userId)
 	context.Next()
 }
