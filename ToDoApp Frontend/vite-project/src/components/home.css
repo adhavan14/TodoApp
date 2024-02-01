@@ -1,5 +1,11 @@
-h1{
+h1 {
     text-align: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.heading {
+    text-align: center;
+    color: white;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 .todo-row{
@@ -10,6 +16,13 @@ h1{
     justify-content: center;
     gap: 4rem;
 }
-.bg-beige{
-    background-color: beige;
+.todo-background{
+    height: 100vh;
+    background-color: #caf0f8;
+}
+body{
+    background-color: #68BBE3;
+}
+.auth-background{
+    background-color:#caf0f8;
 }

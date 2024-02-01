@@ -9,7 +9,8 @@ export const userContext = createContext(null)
 
 export const UserProvider = ({ children }) => {
 
-    const [token, setToken] = useState()
+    const [isLogin, setIsLogin] = useState(false)
+
     const [signUpStatus, setSignUpStatus] = useState(200)
 
     const handleLogin = (username, password) => {
@@ -23,7 +24,8 @@ export const UserProvider = ({ children }) => {
         axios.post(url + "login", payload)
         .then(response => {
             console.log(response.status)
-            setToken(response.data.token)
+            setIsLogin(true)
+            localStorage.setItem("token", JSON.stringify(response.data.token));
         }).catch(error => {
             console.error(error)
         })
@@ -45,9 +47,14 @@ export const UserProvider = ({ children }) => {
         })
     }
 
+    const toggleIsLogin = () => {
+        setIsLogin(false)
+    }
+
     return (
         <userContext.Provider value={{
-            token,
+            isLogin,
+            toggleIsLogin,
             signUpStatus,
             handleLogin,
             handleSignUp
@@ -59,12 +66,12 @@ export const UserProvider = ({ children }) => {
 
 const Routers = () => {
 
-    const { token } = useContext(userContext);
+    const { isLogin } = useContext(userContext);
     const {signUpStatus} = useContext(userContext);
-    
+   
     return (
         <div>
-            {token ? <ShowTodos /> : (signUpStatus == 200 ? <Login /> : <SignUp/>)}
+            {isLogin ? <ShowTodos /> : (signUpStatus == 200 ? <Login /> : <SignUp/>)}
         </div>
     );
 }

@@ -2,10 +2,11 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { useEffect } from "react";
 import "./home.css"
-import ListAltIcon from '@mui/icons-material/ListAlt';
 import TodoForm from "./newTodo/newTodo";
 import TodoItem from "./todo/todoItem";
 import { userContext } from "./router/rootRouter";
+import { AppBar, Button, colors } from "@mui/material";
+import { Navigate } from "react-router-dom";
 
 
 const url = "http://localhost:8080/todo/"
@@ -13,7 +14,8 @@ const url = "http://localhost:8080/todo/"
 function ShowTodos() {
 
     const [data, setData] = useState([]);
-    const { token } = useContext(userContext); 
+    const token = JSON.parse(localStorage.getItem("token")) 
+    const { toggleIsLogin } = useContext(userContext)
 
     useEffect(() => {
         getAll()
@@ -25,16 +27,11 @@ function ShowTodos() {
         setData(response.data)
     }
     
-    const handleClickDelete = (itemId) => {
+    const handleClickDelete = async (itemId) => {
         const header = {Authorization : `Bearer ${token}`}
         console.log(token)
-        axios.delete(url + "delete", { params: { id: itemId } , headers:header})
-        .then(response => {
-            console.log(response.data)
-            getAll()
-        }).catch(error => {
-            console.error(error)
-        })
+        await axios.delete(url + "delete", { params: { id: itemId } , headers:header})
+        getAll()
     }
 
 
@@ -46,33 +43,49 @@ function ShowTodos() {
         );
     };
 
+    const handleClickLogout = () => {
+        localStorage.clear()
+        toggleIsLogin()
+    }
+
     return <div>
-        <div className="flex p-4 text-2xl bg-beige items-center justify-center">
-            <h1>THINGS TO BE SMASHED</h1>
-            <ListAltIcon></ListAltIcon>
+        
+        <AppBar position="static">
+            <div className="flex items-center">
+                <div className="ml-auto">
+                    <div className="flex items-center p-4 text-2xl ">
+                        <h1 className="heading">THINGS TO BE SMASHED</h1>
+                    </div>
+                </div>
+                <div className="ml-auto p-4">
+                    <Button color="inherit" className="heading !text-xl" onClick={handleClickLogout}>Logout</Button>
+                </div>
+            </div>
+        </AppBar>
+        <div className="todo-background">
+            <div>
+                <TodoForm getTodos = {getAll}></TodoForm>
+            </div>
+            <ol>
+                {
+                    data ? (
+                    data.map(item => (
+                    <TodoItem
+                        key={item.Id}
+                        itemId={item.Id}
+                        title={item.Title}
+                        description={item.Description}
+                        isDone={item.IsDone}
+                        getTodos = {getAll}
+                        onCheckboxToggle={onCheckboxToggle}
+                        onDelete={handleClickDelete}/>
+                    ))
+                    ) : (
+                        <h6 className="flex items-center justify-center">No data available</h6>
+                    )
+                }
+            </ol>
         </div>
-        <div>
-            <TodoForm getTodos = {getAll}></TodoForm>
-        </div>
-        <ol>
-            {
-                data ? (
-                data.map(item => (
-                <TodoItem
-                    key={item.Id}
-                    itemId={item.Id}
-                    title={item.Title}
-                    description={item.Description}
-                    isDone={item.IsDone}
-                    getTodos = {getAll}
-                    onCheckboxToggle={onCheckboxToggle}
-                    onDelete={handleClickDelete}/>
-                ))
-                ) : (
-                    <h6 className="flex items-center justify-center">No data available</h6>
-                )
-            }
-        </ol>
         </div>
 }
 
