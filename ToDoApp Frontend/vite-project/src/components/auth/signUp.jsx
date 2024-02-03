@@ -9,6 +9,8 @@ const url = "http://localhost:8080/user/"
 const SignUp = () => {
 
     const {handleSignUp} = useContext(userContext)
+    const { toggleSignUpError, signUpError } = useContext(userContext)
+
     const navigate = useNavigate()
     console.log(handleSignUp)
 
@@ -23,11 +25,13 @@ const SignUp = () => {
             ...signUpData,
             [name]: value,
         });
+        toggleSignUpError()
     }
 
     return (
         <>
-        <div className="p-4 pt-96 -z-10 absolute w-full auth-background"/>
+        <div className="p-4 pt-96 w-full -z-10 absolute auth-background-top"></div>
+      <div className="p-4 pt-96 w-full h-screen -z-20 absolute auth-background-bottom"></div>
             <div className="absoulute p-4 pt-52 flex items-center justify-center">
                 <div className="w-[600px] border border-white p-4 bg-white rounded-3xl">
                     <div className="grid grid-cols-2">
@@ -37,7 +41,7 @@ const SignUp = () => {
                         <div className="w-full p-4">
                             <TextField
                                 id="standard-textarea-title"
-                                label="Username"
+                                label="Username *"
                                 variant="outlined"
                                 name="username"
                                 onChange={handleInputData}
@@ -52,7 +56,7 @@ const SignUp = () => {
                         <div className="p-4 w-full">
                         <TextField
                             id="standard-textarea-description"
-                            label="Password"
+                            label="Password *"
                             variant="outlined"
                             name="password"
                             type="password"
@@ -65,6 +69,7 @@ const SignUp = () => {
                             className="w-full"
                         />
                         </div>
+                        <div className="text-xs text-[#ff3333]"> {signUpError} </div>
                         <div className="p-4">
                             <Button
                                 variant="contained"

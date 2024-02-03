@@ -9,10 +9,14 @@ export const userContext = createContext(null)
 
 export const UserProvider = ({ children }) => {
 
-    const [isLogin, setIsLogin] = useState(false)
+    const [isLogin, setIsLogin] = useState(JSON.parse(localStorage.getItem("token")))
 
     const [signUpStatus, setSignUpStatus] = useState(200)
 
+    const [loginError, setLoginError] = useState()
+
+    const [signUpError, setSignUpError] = useState()
+    
     const handleLogin = (username, password) => {
         
         const url = "http://localhost:8080/user/"
@@ -24,10 +28,12 @@ export const UserProvider = ({ children }) => {
         axios.post(url + "login", payload)
         .then(response => {
             console.log(response.status)
-            setIsLogin(true)
-            localStorage.setItem("token", JSON.stringify(response.data.token));
+            setLoginError(null)
+            localStorage.setItem("token", JSON.stringify(response.data.token))
+            setIsLogin(JSON.parse(localStorage.getItem("token")))
         }).catch(error => {
-            console.error(error)
+            setLoginError(error.response.data.message)
+            console.log(error.response.data.message)
         })
     }
 
@@ -43,19 +49,33 @@ export const UserProvider = ({ children }) => {
             console.log(response.data)
             setSignUpStatus(response.status)
         }).catch(error => {
-            console.error(error)
+            setSignUpStatus(error.response.status)
+            setSignUpError(error.response.data.message)
+            console.log(error.response.data.message)
         })
     }
 
     const toggleIsLogin = () => {
-        setIsLogin(false)
+        setIsLogin(JSON.parse(localStorage.getItem("token")))
+    }
+
+    const toggleLoginError = () => {
+        setLoginError(null)
+    }
+
+    const toggleSignUpError = () => {
+        setSignUpError(null)
     }
 
     return (
         <userContext.Provider value={{
             isLogin,
             toggleIsLogin,
+            loginError,
+            signUpError,
             signUpStatus,
+            toggleLoginError,
+            toggleSignUpError,
             handleLogin,
             handleSignUp
         }}>

@@ -9,7 +9,7 @@ const url = "http://localhost:8080/todo/"
 
 function TodoForm({getTodos}) {
 
-    const { token } = useContext(userContext)
+    const token = JSON.parse(localStorage.getItem("token"))
     const [formData, setFormData] = useState({
         id : 0,
         title : "",
@@ -42,9 +42,9 @@ function TodoForm({getTodos}) {
     }
 
     return (
-        <div className="p-4">
+        <div className="p-3">
             <form onSubmit={(e) => {e.preventDefault(); handleSubmit();}} className="flex justify-between items-center">
-                <div className="ml-40 w-1/6">
+                <div className="w-[20%]">
                 <TextField
                     id="standard-textarea-title"
                     label="Title"
@@ -52,10 +52,10 @@ function TodoForm({getTodos}) {
                     name="title"
                     value={formData.title}
                     onChange={handleInputData}
-                    className="w-full"
+                    className="w-full "
                 />
                 </div>
-                <div className="w-1/2">
+                <div className="w-[60%]">
                 <TextField
                     id="standard-textarea-description"
                     label="Description"
@@ -66,13 +66,13 @@ function TodoForm({getTodos}) {
                     className="w-full"
                 />
                 </div>
-                <div className="w-1/6">
+                <div className="w-[10%]">
                 <Button
                     variant="contained"
                     color="primary"
                     type="submit"
                     disabled={formData.title === '' || formData.description === ''}
-                    className="h-14 w-1/3"
+                    className="h-14 w-full"
                 >
                     ADD
                 </Button>

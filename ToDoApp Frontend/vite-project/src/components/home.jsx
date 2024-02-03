@@ -5,8 +5,8 @@ import "./home.css"
 import TodoForm from "./newTodo/newTodo";
 import TodoItem from "./todo/todoItem";
 import { userContext } from "./router/rootRouter";
+import LogoutIcon from '@mui/icons-material/Logout';
 import { AppBar, Button, colors } from "@mui/material";
-import { Navigate } from "react-router-dom";
 
 
 const url = "http://localhost:8080/todo/"
@@ -48,9 +48,21 @@ function ShowTodos() {
         toggleIsLogin()
     }
 
-    return <div>
-        
-        <AppBar position="static">
+    return (
+        <>
+        <div className="bg-gray-200 absolute -z-10 w-full h-full">
+        <div className="relative">
+        <div className="ml-5 mr-5 mt-5 todo-background-image absolute z-0 w-[98%]"></div>
+        <div className="ml-5 mr-5 mt-20 todo-background-color absolute z-0 w-[98%] blur-image"></div>
+        </div>
+        <div className="absolute z-30 mt-8 w-full">
+            <img src="src/resources/logout.png" className="size-10  bg-white rounded-[20px] float-end mr-8" onClick={handleClickLogout}></img>
+        </div>
+     <div className="absolute z-30 w-full mt-32">
+        <div>
+            <h1 className="heading">TODO</h1>
+        </div>
+        {/* <AppBar position="static">
             <div className="flex items-center">
                 <div className="ml-auto">
                     <div className="flex items-center p-4 text-2xl ">
@@ -61,11 +73,12 @@ function ShowTodos() {
                     <Button color="inherit" className="heading !text-xl" onClick={handleClickLogout}>Logout</Button>
                 </div>
             </div>
-        </AppBar>
-        <div className="todo-background">
-            <div>
+        </AppBar> */}
+        <div >
+            <div className="bg-white w-[60%] rounded-xl mx-auto ">
                 <TodoForm getTodos = {getAll}></TodoForm>
             </div>
+            <div className="bg-white w-[60%] mt-10 rounded-xl mx-auto">
             <ol>
                 {
                     data ? (
@@ -81,12 +94,18 @@ function ShowTodos() {
                         onDelete={handleClickDelete}/>
                     ))
                     ) : (
-                        <h6 className="flex items-center justify-center">No data available</h6>
+                        <div className="mx-auto h-[40%] w-1/2 p-4">
+                            <img src="src/resources/nodata-available.jpg" className="rounded-3xl"></img>
+                        </div>
                     )
                 }
             </ol>
+            </div>
         </div>
         </div>
+        </div>
+        </>
+    )
 }
 
 export default ShowTodos

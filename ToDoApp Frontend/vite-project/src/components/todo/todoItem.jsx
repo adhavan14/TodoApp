@@ -12,7 +12,7 @@ import { userContext } from "../router/rootRouter";
 const url = "http://localhost:8080/todo/"
 const TodoItem = ({ itemId, title, description, isDone, getTodos,onCheckboxToggle, onDelete }) => {
 
-    const { token } = useContext(userContext)
+    const token = JSON.parse(localStorage.getItem("token"))
     const [checked, setChecked] = useState(isDone);
     const [edit, setEdit] = useState(false)
     const [newTitle, setNewTitle] = useState(title)

@@ -4,6 +4,11 @@ import { TextField } from "@mui/material";
 import { Button } from "@mui/material";
 
 const Login = () => {
+
+  const { handleLogin } = useContext(userContext);
+  const { loginError } = useContext(userContext)
+  const { toggleLoginError } = useContext(userContext)
+
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
@@ -15,13 +20,14 @@ const Login = () => {
       ...loginData,
       [name]: value,
     });
+    toggleLoginError()
   };
 
-  const { handleLogin } = useContext(userContext);
-
+  
   return (
     <>
-      <div className="p-4 pt-96 w-full -z-10 absolute auth-background"></div>
+      <div className="p-4 pt-96 w-full -z-10 absolute auth-background-top"></div>
+      <div className="p-4 pt-96 w-full h-screen -z-20 absolute auth-background-bottom"></div>
       <div className="p-4 pt-52">
         <div className="absoulute flex items-center justify-center">
           <div className="w-[600px] border border-white p-4 bg-white rounded-3xl">
@@ -38,7 +44,7 @@ const Login = () => {
                 <div className="w-full p-4">
                   <TextField
                     id="standard-textarea-title"
-                    label="Username"
+                    label="Username*"
                     variant="outlined"
                     name="username"
                     onChange={handleInputData}
@@ -53,7 +59,7 @@ const Login = () => {
                 <div className="w-full p-4">
                   <TextField
                     id="standard-textarea-description"
-                    label="Password"
+                    label="Password*"
                     variant="outlined"
                     name="password"
                     type="password"
@@ -66,6 +72,7 @@ const Login = () => {
                     className="w-full"
                   />
                 </div>
+                <div className="text-xs text-[#ff3333]"> { loginError }</div>
                 <div className="p-4">
                   <Button
                     variant="contained"
