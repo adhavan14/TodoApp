@@ -16,6 +16,7 @@ function ShowTodos() {
     const [data, setData] = useState([]);
     const token = JSON.parse(localStorage.getItem("token")) 
     const { toggleIsLogin } = useContext(userContext)
+    const [activeFilter, SetActiveFilter] = useState([])
 
     useEffect(() => {
         getAll()
@@ -24,6 +25,7 @@ function ShowTodos() {
     const getAll = async() => {
         const header = {Authorization : `Bearer ${token}`}
         const response = await axios.get(url + "getAll", { headers:header })
+        SetActiveFilter(["contained", "",""])
         setData(response.data)
     }
     
@@ -34,6 +36,20 @@ function ShowTodos() {
         getAll()
     }
 
+    const getAllActive = async() => {
+
+    }
+
+    const getAllCompleted = async() => {
+
+    }
+
+    const deleteAllCompleted = async() => {
+        const header = {Authorization : `Bearer ${token}`}
+        console.log(token)
+        await axios.delete(url + "deleteAll", {headers:header})
+        getAll()
+    }
 
     const onCheckboxToggle = (taskId) => {
         setData((prevTodos) =>
@@ -52,13 +68,15 @@ function ShowTodos() {
         <>
         <div className="bg-gray-200 absolute -z-10 w-full h-full">
         <div className="relative">
-        <div className="ml-5 mr-5 mt-5 todo-background-image absolute z-0 w-[98%]"></div>
-        <div className="ml-5 mr-5 mt-20 todo-background-color absolute z-0 w-[98%] blur-image"></div>
+        <div className="ml-5 mr-5 mt-5 overflow-hidden todo-background-image absolute z-0 w-[98%]">
+            <div className="ml-5 mr-5 mt-20 todo-background-color absolute z-0 w-[98%] blur-image"></div>
+        </div>
+        
         </div>
         <div className="absolute z-30 mt-8 w-full">
             <img src="src/resources/logout.png" className="size-10  bg-white rounded-[20px] float-end mr-8" onClick={handleClickLogout}></img>
         </div>
-     <div className="absolute z-30 w-full mt-32">
+     <div className="absolute z-30 w-full mt-36">
         <div>
             <h1 className="heading">TODO</h1>
         </div>
@@ -78,7 +96,7 @@ function ShowTodos() {
             <div className="bg-white w-[60%] rounded-xl mx-auto ">
                 <TodoForm getTodos = {getAll}></TodoForm>
             </div>
-            <div className="bg-white w-[60%] mt-10 rounded-xl mx-auto">
+            <div className="bg-white w-[60%] mt-10 rounded-xl mx-auto max-h-[500px]">
             <ol>
                 {
                     data ? (
@@ -100,6 +118,15 @@ function ShowTodos() {
                     )
                 }
             </ol>
+            </div>
+            <div className="bg-white flex justify-between items-center w-[60%] h-14 mx-auto rounded-xl mt-10">
+                <h4 className="ml-5"> {data ? data.length : 0} ITEMS </h4>
+                <div className="mx-auto">
+                    <Button variant={activeFilter[0]} onClick={getAll}> all </Button>
+                    <Button variant={activeFilter[1]} onClick={getAll}> active </Button>
+                    <Button variant={activeFilter[2]} onClick={getAll}> completed </Button>
+                </div>
+                <Button className="!mr-5" onClick={deleteAllCompleted}>clear completed</Button>
             </div>
         </div>
         </div>

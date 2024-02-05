@@ -47,7 +47,7 @@ function TodoForm({getTodos}) {
                 <div className="w-[20%]">
                 <TextField
                     id="standard-textarea-title"
-                    label="Title"
+                    label="Title *"
                     variant="outlined"
                     name="title"
                     value={formData.title}
@@ -58,7 +58,7 @@ function TodoForm({getTodos}) {
                 <div className="w-[60%]">
                 <TextField
                     id="standard-textarea-description"
-                    label="Description"
+                    label="Description *"
                     variant="outlined"
                     name="description"
                     value={formData.description}
