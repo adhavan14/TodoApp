@@ -37,11 +37,17 @@ function ShowTodos() {
     }
 
     const getAllActive = async() => {
-
+        const header = {Authorization : `Bearer ${token}`}
+        const response = await axios.get(url + "getAllActive", {headers:header})
+        SetActiveFilter(["", "contained", ""])
+        setData(response.data)
     }
 
     const getAllCompleted = async() => {
-
+        const header = {Authorization : `Bearer ${token}`}
+        const response = await axios.get(url + "getAllCompleted", {headers:header})
+        SetActiveFilter(["", "","contained"])
+        setData(response.data)
     }
 
     const deleteAllCompleted = async() => {
@@ -80,21 +86,18 @@ function ShowTodos() {
         <div>
             <h1 className="heading">TODO</h1>
         </div>
-        {/* <AppBar position="static">
-            <div className="flex items-center">
-                <div className="ml-auto">
-                    <div className="flex items-center p-4 text-2xl ">
-                        <h1 className="heading">THINGS TO BE SMASHED</h1>
-                    </div>
-                </div>
-                <div className="ml-auto p-4">
-                    <Button color="inherit" className="heading !text-xl" onClick={handleClickLogout}>Logout</Button>
-                </div>
-            </div>
-        </AppBar> */}
         <div >
             <div className="bg-white w-[60%] rounded-xl mx-auto ">
                 <TodoForm getTodos = {getAll}></TodoForm>
+            </div>
+            <div className="bg-white flex justify-between items-center w-[60%] h-14 mx-auto rounded-xl mt-7">
+                <h4 className="ml-5"> {data ? data.length : 0} ITEMS </h4>
+                <div className="mx-auto">
+                    <Button variant={activeFilter[0]} onClick={getAll}> all </Button>
+                    <Button variant={activeFilter[1]} onClick={getAllActive}> active </Button>
+                    <Button variant={activeFilter[2]} onClick={getAllCompleted}> completed </Button>
+                </div>
+                <Button className="!mr-5" onClick={deleteAllCompleted}>clear completed</Button>
             </div>
             <div className="bg-white w-[60%] mt-10 rounded-xl mx-auto max-h-[500px]">
             <ol>
@@ -118,15 +121,6 @@ function ShowTodos() {
                     )
                 }
             </ol>
-            </div>
-            <div className="bg-white flex justify-between items-center w-[60%] h-14 mx-auto rounded-xl mt-10">
-                <h4 className="ml-5"> {data ? data.length : 0} ITEMS </h4>
-                <div className="mx-auto">
-                    <Button variant={activeFilter[0]} onClick={getAll}> all </Button>
-                    <Button variant={activeFilter[1]} onClick={getAll}> active </Button>
-                    <Button variant={activeFilter[2]} onClick={getAll}> completed </Button>
-                </div>
-                <Button className="!mr-5" onClick={deleteAllCompleted}>clear completed</Button>
             </div>
         </div>
         </div>
